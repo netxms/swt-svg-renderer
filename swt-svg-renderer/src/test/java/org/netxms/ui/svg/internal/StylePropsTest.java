@@ -25,7 +25,7 @@ class StylePropsTest
    void testRootDefaults()
    {
       StyleProps props = StyleProps.ROOT_DEFAULTS;
-      assertTrue(props.getFill() instanceof SVGColor.Absolute);
+      assertTrue(props.getFill() instanceof SVGColor.CurrentColor);
       assertTrue(props.getStroke() instanceof SVGColor.None);
       assertEquals(1.0f, props.getFillOpacity());
       assertEquals(1.0f, props.getStrokeOpacity());
@@ -42,7 +42,7 @@ class StylePropsTest
       StyleProps child = StyleProps.EMPTY;
       StyleProps resolved = child.resolve(StyleProps.ROOT_DEFAULTS);
 
-      assertTrue(resolved.getFill() instanceof SVGColor.Absolute);
+      assertTrue(resolved.getFill() instanceof SVGColor.CurrentColor);
       assertTrue(resolved.getStroke() instanceof SVGColor.None);
       assertEquals(1.0f, resolved.getFillOpacity());
       assertEquals(StyleProps.FILL_RULE_NONZERO, resolved.getFillRule());

@@ -73,7 +73,7 @@ public class SVGImage
 
    /**
     * Render SVG into the given bounds using default settings:
-    * ScaleMode.UNIFORM, currentColor = black.
+    * ScaleMode.UNIFORM, currentColor = black (default fill uses currentColor).
     *
     * @param gc the graphics context to render to
     * @param x target x position in pixels

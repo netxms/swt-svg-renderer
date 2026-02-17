@@ -68,10 +68,11 @@ public final class StyleProps
          FILL_RULE_UNSET, LINE_CAP_UNSET, LINE_JOIN_UNSET);
 
    /**
-    * Root default style per SVG spec: fill=black, stroke=none, opacities=1.
+    * Root default style: fill=currentColor (falls back to black when no
+    * currentColor is provided), stroke=none, opacities=1.
     */
    public static final StyleProps ROOT_DEFAULTS = new StyleProps(
-         new SVGColor.Absolute(0, 0, 0), SVGColor.None.INSTANCE,
+         SVGColor.CurrentColor.INSTANCE, SVGColor.None.INSTANCE,
          1.0f, 1.0f, 1.0f, 1.0f,
          FILL_RULE_NONZERO, LINE_CAP_BUTT, LINE_JOIN_MITER);
 
