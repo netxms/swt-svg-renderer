@@ -135,6 +135,46 @@ class SVGParserTest
       assertTrue(doc.getChildren().size() >= 7);
    }
 
+   @Test
+   void testParseDimensionUnits() throws SVGParseException
+   {
+      // 100mm = 100 * (96/25.4) ≈ 377.953, 50mm ≈ 188.976
+      SVGDocument doc = SVGParser.parse(loadResource("units_mm.svg"));
+      assertEquals(200, doc.getViewBoxWidth());
+      assertEquals(100, doc.getViewBoxHeight());
+      assertEquals(100 * 96.0f / 25.4f, doc.getWidth(), 0.01f);
+      assertEquals(50 * 96.0f / 25.4f, doc.getHeight(), 0.01f);
+   }
+
+   @Test
+   void testParseDimensionVariousUnits() throws SVGParseException
+   {
+      // Test cm: 10cm = 10 * (96/2.54) ≈ 377.953
+      SVGDocument doc = SVGParser.parse("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10cm\" height=\"5cm\"></svg>");
+      assertEquals(10 * 96.0f / 2.54f, doc.getWidth(), 0.01f);
+      assertEquals(5 * 96.0f / 2.54f, doc.getHeight(), 0.01f);
+
+      // Test in: 2in = 192px
+      doc = SVGParser.parse("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"2in\" height=\"3in\"></svg>");
+      assertEquals(192, doc.getWidth(), 0.01f);
+      assertEquals(288, doc.getHeight(), 0.01f);
+
+      // Test pt: 72pt = 96px
+      doc = SVGParser.parse("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"72pt\" height=\"36pt\"></svg>");
+      assertEquals(96, doc.getWidth(), 0.01f);
+      assertEquals(48, doc.getHeight(), 0.01f);
+
+      // Test pc: 6pc = 96px
+      doc = SVGParser.parse("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"6pc\" height=\"3pc\"></svg>");
+      assertEquals(96, doc.getWidth(), 0.01f);
+      assertEquals(48, doc.getHeight(), 0.01f);
+
+      // Test px (unchanged): 100px = 100
+      doc = SVGParser.parse("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100px\" height=\"200px\"></svg>");
+      assertEquals(100, doc.getWidth(), 0.01f);
+      assertEquals(200, doc.getHeight(), 0.01f);
+   }
+
    private InputStream loadResource(String name)
    {
       InputStream is = getClass().getClassLoader().getResourceAsStream(name);

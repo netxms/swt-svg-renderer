@@ -5,7 +5,7 @@
 
     <groupId>org.netxms</groupId>
     <artifactId>swt-svg-renderer</artifactId>
-    <version>1.0</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <properties>

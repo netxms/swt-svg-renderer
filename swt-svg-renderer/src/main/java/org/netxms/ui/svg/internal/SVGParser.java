@@ -289,11 +289,45 @@ public final class SVGParser
          return defaultValue;
       try
       {
-         // Strip "px" suffix if present
          value = value.trim();
+         float unitFactor = 1.0f;
+         int stripLen = 0;
          if (value.endsWith("px"))
-            value = value.substring(0, value.length() - 2).trim();
-         return Float.parseFloat(value);
+         {
+            stripLen = 2;
+         }
+         else if (value.endsWith("mm"))
+         {
+            unitFactor = 96.0f / 25.4f;
+            stripLen = 2;
+         }
+         else if (value.endsWith("cm"))
+         {
+            unitFactor = 96.0f / 2.54f;
+            stripLen = 2;
+         }
+         else if (value.endsWith("in"))
+         {
+            unitFactor = 96.0f;
+            stripLen = 2;
+         }
+         else if (value.endsWith("pt"))
+         {
+            unitFactor = 96.0f / 72.0f;
+            stripLen = 2;
+         }
+         else if (value.endsWith("pc"))
+         {
+            unitFactor = 96.0f / 6.0f;
+            stripLen = 2;
+         }
+         else if (value.endsWith("em") || value.endsWith("ex"))
+         {
+            stripLen = 2;
+         }
+         if (stripLen > 0)
+            value = value.substring(0, value.length() - stripLen).trim();
+         return Float.parseFloat(value) * unitFactor;
       }
       catch(NumberFormatException e)
       {
@@ -306,19 +340,54 @@ public final class SVGParser
       if (value == null || value.isEmpty())
          return -1;
       value = value.trim();
-      // Strip common unit suffixes
-      if (value.endsWith("px"))
-         value = value.substring(0, value.length() - 2).trim();
-      else if (value.endsWith("pt"))
-         value = value.substring(0, value.length() - 2).trim();
-      else if (value.endsWith("em") || value.endsWith("ex"))
-         value = value.substring(0, value.length() - 2).trim();
+
       // Ignore percentage
       if (value.endsWith("%"))
          return -1;
+
+      // Determine unit conversion factor (CSS reference: 1in = 96px)
+      float unitFactor = 1.0f;
+      int stripLen = 0;
+      if (value.endsWith("px"))
+      {
+         stripLen = 2;
+      }
+      else if (value.endsWith("mm"))
+      {
+         unitFactor = 96.0f / 25.4f;
+         stripLen = 2;
+      }
+      else if (value.endsWith("cm"))
+      {
+         unitFactor = 96.0f / 2.54f;
+         stripLen = 2;
+      }
+      else if (value.endsWith("in"))
+      {
+         unitFactor = 96.0f;
+         stripLen = 2;
+      }
+      else if (value.endsWith("pt"))
+      {
+         unitFactor = 96.0f / 72.0f;
+         stripLen = 2;
+      }
+      else if (value.endsWith("pc"))
+      {
+         unitFactor = 96.0f / 6.0f;
+         stripLen = 2;
+      }
+      else if (value.endsWith("em") || value.endsWith("ex"))
+      {
+         stripLen = 2;
+      }
+
+      if (stripLen > 0)
+         value = value.substring(0, value.length() - stripLen).trim();
+
       try
       {
-         return Float.parseFloat(value);
+         return Float.parseFloat(value) * unitFactor;
       }
       catch(NumberFormatException e)
       {
